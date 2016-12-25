@@ -1,2 +1,3 @@
-# BountiesPE
-If you want me to start working on this project/repo, please star or watch it from the top right section!
+# BountyPE
+Download working .phar from here --> https://www.imagicalmine.net/community/plugins/bounty.707/
+Join my Prison/Factions MCPE server and check it out. IP: FallenTech.tk Port: 19132

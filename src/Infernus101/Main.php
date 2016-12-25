@@ -76,6 +76,9 @@ class Main extends PluginBase implements Listener{
 					$money = $this->getBountyMoney($lowr);
 					$killer->sendMessage("§b[BOUNTY]§a>§b You get extra §6$money §bfrom bounty for killing §a$name"."§b!");
 					EconomyAPI::getInstance()->addMoney($killer->getName(), $money);
+					if($this->cfg->get("bounty_broadcast") == 1){
+			          $this->getServer()->broadcastMessage("§b§l[BOUNTY]> §r§a$name2 §fjust got §6$money"."$ §fbounty for killing §a$name!");
+		            }
 				if($this->cfg->get("bounty_fine") == 1){
 					$perc = $this->cfg->get("fine_percentage");
 					$fine = ($money*$perc)/100;
@@ -120,8 +123,8 @@ class Main extends PluginBase implements Listener{
 			   break;
 		   }
 		   if(!is_numeric($args[2])) {
-				$sender->sendMessage("§cUsage: /bounty set $args[1] <money>\n§bBOUNTY> §cMoney has to be a number!");
-				break;
+			   $sender->sendMessage("§cUsage: /bounty set $args[1] <money>\n§bBOUNTY> §cMoney has to be a number!");
+			   break;
 		   }
 		   $min = $this->cfg->get("min_bounty");
 		   if($money < $min){
@@ -129,9 +132,13 @@ class Main extends PluginBase implements Listener{
 			  break;
 		   }
 		   if($fail = EconomyAPI::getInstance()->reduceMoney($sender, $money)) {
+		   $player = $sender->getName();
 		   $this->addBounty($lower, $money);
 		   $sender->sendMessage("§bBOUNTY> §aSuccessfully added §6$money"."$ §abounty on §e$invited");
 		   $playerid->sendMessage("§bBOUNTY> §cA Bounty has been added on you for §6$money"."$ §cby §a$name\n§6Check total bounty on you by /bounty me");
+		   if($this->cfg->get("bounty_broadcast") == 1){
+			   $this->getServer()->broadcastMessage("§b§l[BOUNTY]> §r§a$player §fjust added §6$money"."$ §fbounty on §a$invited!");
+		   }
 		   break;
 		   }else {
 						switch($fail){
@@ -196,7 +203,7 @@ class Main extends PluginBase implements Listener{
 				      }
 		    break;
 		   case "about":
-		    $sender->sendMessage("§bBounty v1.5 by §aInfernus101\n§eCheckout my MCPE server IP: FallenTech.tk Port: 19132");
+		    $sender->sendMessage("§bBounty v2.0 by §aInfernus101\n§eCheckout my MCPE server IP: FallenTech.tk Port: 19132");
 		    break;   
 		   default:
 		    $sender->sendMessage("§cUsage: /bounty <set | me | search | top | about>");
@@ -205,4 +212,3 @@ class Main extends PluginBase implements Listener{
 	}
   }
 }
-

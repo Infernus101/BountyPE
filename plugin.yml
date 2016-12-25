@@ -1,7 +1,7 @@
 name: Bounty
 api: 2.0.0
 main: Infernus101\Main
-version: 1.5
+version: 2.0
 author: Infernus101
 commands:
   bounty:

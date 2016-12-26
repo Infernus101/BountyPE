@@ -53,7 +53,7 @@ class Main extends PluginBase implements Listener{
 		$entity = $event->getEntity();
 		if($entity instanceof Player){
 			$player = $entity->getPlayer();
-			if($this->cfg->get("bounty_stats") == 1){
+			if($this->cfg->get("bounty_stats") == 1 or $this->cfg->get("health_stats") == 1){
 		    $this->renderNametag($player);
 		    }
 		  }
@@ -62,14 +62,14 @@ class Main extends PluginBase implements Listener{
 		$entity = $event->getEntity();
 		if($entity instanceof Player){
 			$player = $entity->getPlayer();
-			if($this->cfg->get("bounty_stats") == 1){
+			if($this->cfg->get("bounty_stats") == 1 or $this->cfg->get("health_stats") == 1){
 		    $this->renderNametag($player);
 		    }
 		  }
 	    }
 		public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
-		 if($this->cfg->get("bounty_stats") == 1){
+		 if($this->cfg->get("bounty_stats") == 1 or $this->cfg->get("health_stats") == 1){
 		 $this->renderNametag($player);
 		 }
 	    }
@@ -103,7 +103,15 @@ class Main extends PluginBase implements Listener{
 		$username = $player->getName();
 		$lower = strtolower($username);
 		$bounty = $this->getBountyMoney2($lower);
+		if($this->cfg->get("bounty_stats") == 1 && $this->cfg->get("health_stats") != 1){
 		$player->setNameTag("§a$username\n§eBounty: §6$bounty"."$");
+		}
+		if($this->cfg->get("health_stats") == 1 && $this->cfg->get("bounty_stats") != 1){
+		$player->setNameTag("§a$username §c".$player->getHealth()."§f/§c".$player->getMaxHealth());
+		}
+		if($this->cfg->get("bounty_stats") == 1 && $this->cfg->get("health_stats") == 1){
+		$player->setNameTag("§a$username §c".$player->getHealth()."§f/§c".$player->getMaxHealth()."\n§eBounty: §6$bounty"."$");
+		}
 	    }
 		public function onDeath(PlayerDeathEvent $event) {
         $cause = $event->getEntity()->getLastDamageCause();
@@ -245,7 +253,7 @@ class Main extends PluginBase implements Listener{
 				      }
 		    break;
 		   case "about":
-		    $sender->sendMessage("§bBounty v2.5 by §aInfernus101\n§eCheckout my MCPE server IP: FallenTech.tk Port: 19132");
+		    $sender->sendMessage("§bBounty v3.0 by §aInfernus101\n§eCheckout my MCPE server IP: FallenTech.tk Port: 19132");
 		    break;   
 		   default:
 		    $sender->sendMessage("§cUsage: /bounty <set | me | search | top | about>");

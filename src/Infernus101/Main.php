@@ -11,6 +11,9 @@ namespace Infernus101;
 
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\plugin\PluginBase;
 use pocketmine\Player;
@@ -46,6 +49,39 @@ class Main extends PluginBase implements Listener{
         $resultArr = $result->fetchArray(SQLITE3_ASSOC);
         return (int) $resultArr["money"];
         }
+		public function onEntityDamage(EntityDamageEvent $event){
+		$entity = $event->getEntity();
+		if($entity instanceof Player){
+			$player = $entity->getPlayer();
+			if($this->cfg->get("bounty_stats") == 1){
+		    $this->renderNametag($player);
+		    }
+		  }
+	    }
+	    public function onEntityRegainHealth(EntityRegainHealthEvent $event){
+		$entity = $event->getEntity();
+		if($entity instanceof Player){
+			$player = $entity->getPlayer();
+			if($this->cfg->get("bounty_stats") == 1){
+		    $this->renderNametag($player);
+		    }
+		  }
+	    }
+		public function onJoin(PlayerJoinEvent $event){
+		$player = $event->getPlayer();
+		 if($this->cfg->get("bounty_stats") == 1){
+		 $this->renderNametag($player);
+		 }
+	    }
+		public function getBountyMoney2($play){
+		  if(!$this->bountyExists($play)){
+			  $i = 0;
+			  return $i;
+		  }
+        $result = $this->db->query("SELECT * FROM bounty WHERE player = '$play';");
+        $resultArr = $result->fetchArray(SQLITE3_ASSOC);
+        return (int) $resultArr["money"];
+        }
 	    public function deleteBounty($pla){
 		$this->db->query("DELETE FROM bounty WHERE player = '$pla';");
 	    }
@@ -63,6 +99,12 @@ class Main extends PluginBase implements Listener{
 		   $result = $stmt->execute();	   
 	     }
 		}
+		public function renderNameTag($player){
+		$username = $player->getName();
+		$lower = strtolower($username);
+		$bounty = $this->getBountyMoney2($lower);
+		$player->setNameTag("§a$username\n§eBounty: §6$bounty"."$");
+	    }
 		public function onDeath(PlayerDeathEvent $event) {
         $cause = $event->getEntity()->getLastDamageCause();
         if($cause instanceof EntityDamageByEntityEvent) {
@@ -203,7 +245,7 @@ class Main extends PluginBase implements Listener{
 				      }
 		    break;
 		   case "about":
-		    $sender->sendMessage("§bBounty v2.0 by §aInfernus101\n§eCheckout my MCPE server IP: FallenTech.tk Port: 19132");
+		    $sender->sendMessage("§bBounty v2.5 by §aInfernus101\n§eCheckout my MCPE server IP: FallenTech.tk Port: 19132");
 		    break;   
 		   default:
 		    $sender->sendMessage("§cUsage: /bounty <set | me | search | top | about>");

@@ -1,5 +1,5 @@
 name: Bounty
-api: 2.0.0
+api: [2.1.0, 2.0.0]
 main: Infernus101\Main
 version: 3.0
 author: Infernus101
